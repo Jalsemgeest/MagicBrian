@@ -4,6 +4,7 @@ import { Link, withRouter } from "react-router-dom";
 
 import TopNav from "./TopNav";
 import Button from "./ui/Button";
+import ActiveLink from "./ui/ActiveLink";
 
 @withRouter
 @inject("store")
@@ -21,14 +22,19 @@ export default class TopBar extends Component {
 	}
 
 	render() {
-		const { authenticated } = this.store;
+		const { authenticated, email } = this.store;
+
 		return (
 			<div className="topbar">
 				<TopNav location={this.props.location} />
-				<Button
-					onClick={this.authenticate.bind(this)}
-					title={authenticated ? "Log out" : "Sign in"}
-				/>
+				{
+					!authenticated ?
+							<ActiveLink to="/Login">Login</ActiveLink> :
+							<div>
+								<p>{email}</p>
+								<ActiveLink to="/logout">Logout</ActiveLink>
+							</div>
+				}
 			</div>
 		);
 	}

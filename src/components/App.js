@@ -27,7 +27,6 @@ export default class App extends Component {
 			authenticating,
 			timeToRefresh,
 			refreshToken,
-			testval
 		} = this.store.appState;
 		return (
 			<div className="wrapper">
@@ -43,16 +42,16 @@ export default class App extends Component {
 				/>
 				<Route
 					exact
-					path="/posts"
+					path="/decks"
 					render={props => (
-						<LazyRoute {...props} component={import("./SubPage")} />
+						<LazyRoute {...props} component={import("./DecksPage")} />
 					)}
 				/>
 				<Route
 					exact
-					path="/posts/:id"
+					path="/deck/:username/:id"
 					render={props => (
-						<LazyRoute {...props} component={import("./SubItem")} />
+						<LazyRoute {...props} component={import("./DeckPage")} />
 					)}
 				/>
 				<Route
@@ -63,15 +62,8 @@ export default class App extends Component {
 					)}
 				/>
 				<footer>
-					{testval}
-					<a href="https://twitter.com/mhaagens" target="_blank">
-						@mhaagens
-					</a>
-					{" "}
-					| github:
-					{" "}
-					<a href="https://github.com/mhaagens" target="_blank">
-						mhaagens
+					<a href="https://twitter.com/alsemgeester" target="_blank">
+						Created and maintained by @alsemgeester
 					</a>
 				</footer>
 			</div>
