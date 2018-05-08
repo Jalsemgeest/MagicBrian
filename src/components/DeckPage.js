@@ -25,21 +25,6 @@ export default class DeckPage extends Component {
         // Perform an autocomplete query.
         console.log(this.store);
         this.store.appState.fetchCards({ name: this.state.searchValue });
-        // Remote.getCards({ name: this.state.searchValue })
-        //   .then((cards) => {
-        //     let target = document.getElementById('temp-cards');
-        //     let html = '';
-        //     // this.props.cards = cards;
-        //     for (let i = 0; i < cards.length; i++) {
-        //       html += '<p>' + cards[i].name + '</p>';
-        //     }
-        //     target.innerHTML = html;
-        //     console.log('Found some cards...');
-        //     console.log(cards);
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
       }
     });
 	}

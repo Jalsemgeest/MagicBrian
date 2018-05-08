@@ -14,25 +14,26 @@ export default class DecksPage extends Component {
 		this.store = this.props.store;
 	}
 	render() {
-		const { items } = this.store.appState;
+		const { decks } = this.store.appState;
 		return (
 			<div className="page posts">
 				<h1>Decks</h1>
+				<Link to="/edit/new">Create New Deck</Link>
 				<p className="subheader">
 					Decks associated with your account.
 				</p>
 				<hr />
 				<ul>
-					{items && items.length
-						? items.slice(6, 12).map(post => {
+					{decks && decks.length
+						? decks.slice(6, 12).map(deck => {
 								return (
-									<li key={post.id}>
+									<li key={deck.id}>
 										<Link
-											to={`${this.props.match.path}/${post.id}`}
+											to={`${this.props.match.path}/${deck.id}`}
 										>
-											<h1>{post.title}</h1>
+											<h1>{deck.title}</h1>
 										</Link>
-										<p>{post.body.substring(0, 120)}</p>
+										<p>{deck.body.substring(0, 120)}</p>
 									</li>
 								);
 							})

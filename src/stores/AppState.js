@@ -7,6 +7,7 @@ export default class AppState {
   @observable items;
   @observable item;
   @observable cards;
+  @observable currentDeck;
   @observable decks;
 
   constructor() {
@@ -14,6 +15,7 @@ export default class AppState {
     this.authenticating = false;
     this.items = [];
     this.item = {};
+    this.currentDeck = {};
     this.cards = [];
     this.decks = [];
   }
@@ -115,6 +117,82 @@ export default class AppState {
     });
   }
 
+  @action login(userEmail, password) {
+    return new Promise((resolve, reject) => {
+      this.authenticating = true;
+      let self = this;
+      try {
+        axios.post(`http://localhost:8080/login`, { email: userEmail, password })
+          .then((data) => {
+            console.log(data);
+            self.authenticating = false;
+            localStorage["auth"] = data.data.auth;
+            localStorage["refresh"] = data.data.refresh;
+            localStorage["email"] = userEmail;
+            self.authenticated = true;
+            resolve();
+          })
+          .catch((error) => {
+            self.authenticating = false;
+            switch(error.status) {
+              case 409:
+                alert('The user already exists.');
+                reject();
+                return;
+              case 500:
+                alert(error.message);
+                reject();
+                return;
+            }
+          });
+      } catch(err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
+  @action logout() {
+    return new Promise((resolve, reject) => {
+      if (!this.authenticated) {
+        this.clearUser();
+        reject();
+        return;
+      }
+
+      const email = this.email,
+            auth = this.auth;
+
+      if (!email || !auth) {
+        this.clearUser();
+        reject();
+        return;
+      }
+
+      let self = this;
+      try {
+        axios.post(`http://localhost:8080/logout`, { email, auth })
+          .then((data) => {
+            console.log(data);
+            self.authenticating = false;
+            this.authenticated = false;
+            this.clearUser();
+            resolve();
+          })
+          .catch((error) => {
+            console.log(error.message);
+            self.authenticating = false;
+            self.authenticated = false;
+            this.clearUser();
+            reject();
+          });
+      } catch(err) {
+        console.log(err);
+        reject(err);
+      }
+    });
+  }
+
   @action register(userEmail, password, passwordConfirm) {
     return new Promise((resolve, reject) => {
       this.authenticating = true;
@@ -145,6 +223,7 @@ export default class AppState {
           });
       } catch(err) {
         console.log(err);
+        reject(err);
       }
     });
   }

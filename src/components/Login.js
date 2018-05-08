@@ -23,6 +23,18 @@ export default class Login extends Component {
 			// Logging in.
 			console.log('Logging in.');
 			console.log(this.state);
+			if (!this.state.password.length || !this.state.email) {
+				alert("You must provide an email and password to login.");
+				return;
+			}
+			this.store.appState.login(this.state.email, this.state.password)
+				.then(() => {
+					console.log('Success');
+					this.props.history.push('/');
+				})
+				.catch(() => {
+					this.props.history.push('/login');
+				});
 		} else {
 			if (this.state.password !== this.state.passwordConfirm) {
 				alert("Password and Password Confirm need to be the same.");

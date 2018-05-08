@@ -61,6 +61,20 @@ export default class App extends Component {
 						<LazyRoute {...props} component={import("./Login")} />
 					)}
 				/>
+				<Route
+					exact
+					path="/logout"
+					render={props => (
+						<LazyRoute {...props} component={import("./Logout")} />
+					)}
+				/>
+				<Route
+					exact
+					path="/edit/:deckname"
+					render={props => (
+						<LazyRoute {...props} component={import("./EditDeck")} />
+					)}
+				/>
 				<footer>
 					<a href="https://twitter.com/alsemgeester" target="_blank">
 						Created and maintained by @alsemgeester
