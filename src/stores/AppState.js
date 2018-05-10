@@ -73,38 +73,38 @@ export default class AppState {
     return localStorage["refresh"];
   }
 
-  @computed get email() {
-    return localStorage["email"];
+  @computed get username() {
+    return localStorage["username"];
   }
 
   clearUser() {
-    localStorage.removeItem("email");
+    localStorage.removeItem("username");
     localStorage.removeItem("auth");
     localStorage.removeItem("refresh");
   }
 
   @action authenticate() {
     // Attempt to authenticate using saved auth and refresh tokens.
-    const email = this.email,
+    const username = this.username,
           auth = this.auth,
           refresh = this.refresh;
 
     return new Promise((resolve, reject) => {
-      if (!email || !auth || !refresh) {
+      if (!username || !auth || !refresh) {
         // Send all to server.
         this.clearUser();
         reject();
         return;
       }
 
-      axios.post(`http://localhost:8080/auth`, { email, auth, refresh })
+      axios.post(`http://localhost:8080/auth`, { username, auth, refresh })
         .then((data) => {
           if (data.data.status === 'VALID_AUTH') {
             // Valid auth.
-            localStorage["email"] = data.data.email;
+            localStorage["username"] = data.data.username;
           } else if (data.data.status === 'NEW_AUTH_GENERATED') {
             localStorage["auth"] = data.data.auth;
-            localStorage["email"] = data.data.email;
+            localStorage["username"] = data.data.username;
           }
           this.authenticated = true;
           resolve();
@@ -117,18 +117,18 @@ export default class AppState {
     });
   }
 
-  @action login(userEmail, password) {
+  @action login(username, password) {
     return new Promise((resolve, reject) => {
       this.authenticating = true;
       let self = this;
       try {
-        axios.post(`http://localhost:8080/login`, { email: userEmail, password })
+        axios.post(`http://localhost:8080/login`, { username: username, password })
           .then((data) => {
             console.log(data);
             self.authenticating = false;
             localStorage["auth"] = data.data.auth;
             localStorage["refresh"] = data.data.refresh;
-            localStorage["email"] = userEmail;
+            localStorage["username"] = username;
             self.authenticated = true;
             resolve();
           })
@@ -160,10 +160,10 @@ export default class AppState {
         return;
       }
 
-      const email = this.email,
+      const username = this.username,
             auth = this.auth;
 
-      if (!email || !auth) {
+      if (!username || !auth) {
         this.clearUser();
         reject();
         return;
@@ -171,7 +171,7 @@ export default class AppState {
 
       let self = this;
       try {
-        axios.post(`http://localhost:8080/logout`, { email, auth })
+        axios.post(`http://localhost:8080/logout`, { username, auth })
           .then((data) => {
             console.log(data);
             self.authenticating = false;
@@ -193,18 +193,18 @@ export default class AppState {
     });
   }
 
-  @action register(userEmail, password, passwordConfirm) {
+  @action register(username, userEmail, password) {
     return new Promise((resolve, reject) => {
       this.authenticating = true;
       let self = this;
       try {
-        axios.post(`http://localhost:8080/register`, { email: userEmail, password })
+        axios.post(`http://localhost:8080/register`, { username, email: userEmail, password })
           .then((data) => {
             console.log(data);
             self.authenticating = false;
             localStorage["auth"] = data.data.auth;
             localStorage["refresh"] = data.data.refresh;
-            localStorage["email"] = userEmail;
+            localStorage["username"] = username;
             self.authenticated = true;
             resolve();
           })

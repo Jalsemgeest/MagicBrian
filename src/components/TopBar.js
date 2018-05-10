@@ -22,7 +22,7 @@ export default class TopBar extends Component {
 	}
 
 	render() {
-		const { authenticated, email } = this.store;
+		const { authenticated, username } = this.store;
 
 		return (
 			<div className="topbar">
@@ -31,7 +31,7 @@ export default class TopBar extends Component {
 					!authenticated ?
 							<ActiveLink to="/Login">Login</ActiveLink> :
 							<div>
-								<p>{email}</p>
+								<p>{username}</p>
 								<ActiveLink to="/logout">Logout</ActiveLink>
 							</div>
 				}

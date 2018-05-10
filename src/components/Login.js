@@ -11,6 +11,7 @@ export default class Login extends Component {
 		this.store = this.props.store;
 		this.state = {
 			registration: false,
+			username: '',
 			email: '',
 			password: '',
 			passwordConfirm: '',
@@ -23,11 +24,11 @@ export default class Login extends Component {
 			// Logging in.
 			console.log('Logging in.');
 			console.log(this.state);
-			if (!this.state.password.length || !this.state.email) {
-				alert("You must provide an email and password to login.");
+			if (!this.state.password.length || !this.state.username) {
+				alert("You must provide an username and password to login.");
 				return;
 			}
-			this.store.appState.login(this.state.email, this.state.password)
+			this.store.appState.login(this.state.username, this.state.password)
 				.then(() => {
 					console.log('Success');
 					this.props.history.push('/');
@@ -43,7 +44,7 @@ export default class Login extends Component {
 			// Registration.
 			console.log('Registering.');
 			console.log(this.state);
-			this.store.appState.register(this.state.email, this.state.password)
+			this.store.appState.register(this.state.username, this.state.email, this.state.password)
 				.then(() => {
 					console.log('Success');
 					this.props.history.push('/');
@@ -60,7 +61,12 @@ export default class Login extends Component {
 		this.setState({ registration: !this.state.registration });
 	}
 
-	emailChange(e) {
+	changeUsername(e) {
+		e.preventDefault();
+		this.setState({ username: e.target.value });
+	}
+
+	changeEmail(e) {
 		e.preventDefault();
 		this.setState({ email: e.target.value });
 	}
@@ -79,10 +85,15 @@ export default class Login extends Component {
 		return (
 			<div className="page login">
 				<form onSubmit={this.submit.bind(this)}>
-					<input placeholder="muldrotha@notyouraddress.com"
-								 onChange={this.emailChange.bind(this)}
-								 type="email"
-								 value={this.state.email} type="text"/>
+					<input placeholder="username"
+								 onChange={this.changeUsername.bind(this)}
+								 type="text"
+								 value={this.state.username} type="text"/>
+					{ !!this.state.registration && <input placeholder="muldrotha@magicbrian.com"
+																								value={this.state.email}
+																								onChange={this.changeEmail.bind(this)}
+																								value={this.state.email}
+																								type="email" /> }
 					<input placeholder="password"
 								 value={this.state.password}
 								 onChange={this.passwordChange.bind(this)}
