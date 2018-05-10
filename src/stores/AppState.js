@@ -89,6 +89,8 @@ export default class AppState {
           auth = this.auth,
           refresh = this.refresh;
 
+    this.authenticating = true;
+
     return new Promise((resolve, reject) => {
       if (!username || !auth || !refresh) {
         // Send all to server.
@@ -107,10 +109,12 @@ export default class AppState {
             localStorage["username"] = data.data.username;
           }
           this.authenticated = true;
+          this.authenticating = false;
           resolve();
         })
         .catch((error) => {
           this.authenticated = false;
+          this.authenticating = false;
           this.clearUser();
           reject(error);
         });

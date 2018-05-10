@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { inject, observer } from "mobx-react";
 import { Redirect } from "react-router-dom";
+import NotWhenLoggedIn from './NotWhenLoggedIn';
 
+@NotWhenLoggedIn
 @inject("store")
 @observer
 export default class Login extends Component {
@@ -111,8 +113,10 @@ export default class Login extends Component {
 				<a onClick={this.toggleRegistration.bind(this)}>
 				{ this.state.registration ? "Login" : "Register" }
 				</a>
-				{this.props.store.authenticated &&
-					!this.props.store.authenticating &&
+				{(this.props.store.authenticated &&
+					!this.props.store.authenticating) ||
+					(this.props.store.authenticating &&
+					this.props.store.username) &&
 					<Redirect to="/" />}
 			</div>
 		);
